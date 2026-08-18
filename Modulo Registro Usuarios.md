@@ -27,53 +27,32 @@ El estudiante tendrá un nivel de acceso limitado a las funciones que necesita c
 El funcionamiento previsto del módulo comienza cuando un usuario autorizado accede al formulario de registro. En este formulario se introducen los datos personales y las credenciales del nuevo usuario. Posteriormente, se selecciona el rol correspondiente de acuerdo con las funciones que tendrá dentro del sistema.
 El proceso general puede representarse de la siguiente manera:
           Inicio
-            │
-            ▼
    Formulario de registro
-            │
-            ▼
      Introducir datos
-            │
-            ▼
       Seleccionar rol
-            │
-            ▼
-    Validar información
-            │
-            ▼
-     Registrar usuario
-            │
-            ▼
+    Validar información 
+    Registrar usuario
            Fin
 La validación y el almacenamiento de la información serán integrados posteriormente con la lógica de negocio y el acceso a la base de datos.
 5. Relación con la arquitectura de software
 El formulario de creación de usuarios corresponde a la capa de presentación de la arquitectura de la aplicación. Esta capa es la encargada de proporcionar la interfaz mediante la cual el usuario interactúa con el sistema.
 La estructura propuesta para el módulo contempla la separación de responsabilidades de la siguiente manera:
-┌──────────────────────────────┐
-│       PRESENTACIÓN           │
-│                              │
-│ Formulario de usuarios       │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│      LÓGICA DE NEGOCIO       │
-│                              │
-│ Validación y gestión         │
-│ de usuarios y roles          │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│       ACCESO A DATOS         │
-│                              │
-│          UsuarioDAO          │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│        BASE DE DATOS         │
-└──────────────────────────────┘
+
+PRESENTACIÓN          
+                              
+Formulario de usuarios       
+               
+LÓGICA DE NEGOCIO       
+                              
+Validación y gestión        
+de usuarios y roles          
+            
+ACCESO A DATOS         
+                              
+UsuarioDAO          
+
+BASE DE DATOS         
+
 Esta organización permite mantener separada la interfaz del usuario de las operaciones relacionadas con los datos. De acuerdo con la estructura definida por el equipo, el acceso a los datos se realizará mediante el patrón DAO (Data Access Object).
 En el estado actual del proyecto, el formulario representa principalmente la parte de presentación. La conexión con las demás capas será realizada durante la integración del módulo.
 6. Tecnologías utilizadas
