@@ -59,7 +59,7 @@
             panelContenedor.Name = "panelContenedor";
             panelContenedor.Size = new Size(908, 697);
             panelContenedor.TabIndex = 1;
-            panelContenedor.Paint += panelContenedor_Paint;
+           // panelContenedor.Paint += panelContenedor_Paint;
             // 
             // panelBottom
             // 
