@@ -1,0 +1,17 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Archivos compilados
+**/bin/
+**/obj/
+
+# Archivos temporales
+*.cache
+*.tmp
+
+# Archivos generados por NuGet
+*.nuget.g.props
+*.nuget.g.targets
+project.assets.json
