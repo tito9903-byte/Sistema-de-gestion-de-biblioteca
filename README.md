@@ -1,83 +1,64 @@
 # Sistema de Gestión de Biblioteca
 
-Proyecto realizado para la asignatura **Ingeniería de Software II** de la Universidad Abierta para Adultos (UAPA).
+Proyecto desarrollado para la asignatura **Ingeniería de Software II** de la Universidad Abierta para Adultos (UAPA).
 
-## Sobre el proyecto
+## Descripción
 
-Este proyecto consiste en desarrollar un sistema para llevar el control de una biblioteca.
+El proyecto consiste en un Sistema de Gestión de Biblioteca desarrollado en C# utilizando Windows Forms.
 
-La idea es poder registrar los libros, administrar los usuarios y llevar el control de los préstamos y devoluciones. También se manejarán diferentes tipos de usuarios para controlar lo que cada persona puede hacer dentro del sistema.
+En esta etapa se trabajó principalmente el módulo de usuarios, donde se pueden registrar usuarios y asignarles diferentes roles dentro del sistema.
 
-## Funciones principales
+También se agregó un inicio de sesión conectado a la base de datos para validar los usuarios registrados.
 
-Entre las funciones que tendrá el sistema están:
+## Funciones desarrolladas
 
-* Inicio de sesión.
-* Registro de usuarios.
-* Manejo de roles y permisos.
-* Registro de libros.
-* Consulta de libros.
-* Edición y eliminación de libros.
-* Registro de préstamos.
-* Registro de devoluciones.
-* Consulta de libros disponibles y prestados.
+Actualmente el sistema permite:
 
-Durante el desarrollo pueden agregarse otras funciones que sean necesarias.
+- Iniciar sesión con un usuario registrado.
+- Registrar nuevos usuarios.
+- Asignar roles a los usuarios.
+- Editar usuarios existentes.
+- Cambiar la contraseña de un usuario.
+- Buscar usuarios por nombre, usuario o rol.
+- Activar y desactivar usuarios.
+- Eliminar usuarios.
+- Validar que no se registren usuarios repetidos.
+- Validar que las contraseñas coincidan.
+- Consultar los usuarios registrados desde la base de datos.
+
+## Roles
+
+Los roles se encuentran registrados en la base de datos y se cargan automáticamente en el formulario de registro de usuarios.
+
+Entre los roles utilizados se encuentran:
+
+- Administrador
+- Bibliotecario
+- Usuario
+
+Estos roles permiten identificar el nivel de acceso que tendrá cada usuario dentro del sistema.
 
 ## Organización del proyecto
 
-El proyecto estará organizado inicialmente de la siguiente manera:
+El proyecto está organizado de la siguiente manera:
 
 ```text
-SistemaGestionBiblioteca/
+SistemaDeGestionDeBiblioteca/
 │
 ├── Clases/
+│   └── UsuarioDAO.cs
+│
 ├── Conexion/
+│   └── ConexionBD.cs
+│
 ├── Presentacion/
-└── README.md
-```
-
-### Clases
-
-Aquí estarán las clases utilizadas por el sistema, incluyendo las clases DAO encargadas de realizar las operaciones con los datos.
-
-Algunas de ellas serán:
-
-* UsuarioDAO
-* LibroDAO
-* PrestamoDAO
-* RolDAO
-
-### Conexion
-
-Aquí estará la clase encargada de realizar la conexión con la base de datos.
-
-### Presentacion
-
-Aquí estarán los formularios y las pantallas que utilizará el usuario, como el inicio de sesión, registro de usuarios, libros y préstamos.
-
-## Patrón DAO
-
-Para trabajar con la base de datos utilizaremos el patrón **DAO (Data Access Object)**.
-
-Esto nos permitirá mantener las consultas y operaciones de la base de datos separadas de los formularios del sistema.
-
-## Participantes
-
-**Grupo M**
-
-* Luis Emilio Garcia Pichardo — 100083094
-* Brian Amaury Lora De Dios — 100089342
-* Elio De Jesus Dilone — 100092874
-
-## Asignatura
-
-Ingeniería de Software II
-
-## Institución
-
-Universidad Abierta para Adultos (UAPA)
-
-## Estado
-
-Proyecto en desarrollo.
+│   ├── frmLogin.cs
+│   ├── frmMain.cs
+│   ├── FrmUsuarios.cs
+│   └── FrmRegistroUsuario.cs
+│
+├── Properties/
+│
+├── Program.cs
+│
+└── SistemaDeGestionDeBiblioteca.csproj
