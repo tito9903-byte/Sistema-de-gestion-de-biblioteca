@@ -1,71 +1,167 @@
-Módulo de Creación de Usuarios por Roles
+Módulo de Creación y Gestión de Usuarios por Roles
 1. Descripción del módulo
-El módulo de creación de usuarios por roles forma parte del Sistema de Gestión de Biblioteca y tiene como finalidad permitir el registro de las personas que utilizarán el sistema. Además de almacenar los datos básicos de cada usuario, el módulo permite asignarle un rol, de manera que posteriormente se puedan establecer los privilegios y las funciones a las que tendrá acceso dentro de la aplicación.
-Este módulo es importante porque el sistema no tendrá el mismo nivel de acceso para todos los usuarios. Por esta razón, la asignación de roles permite organizar los permisos de acuerdo con las responsabilidades de cada persona dentro de la biblioteca.
-2. Diseño del formulario
-El formulario desarrollado contiene los campos necesarios para registrar la información básica de un usuario. Actualmente se encuentra diseñado en Windows Forms utilizando C# y está preparado para ser integrado posteriormente con la lógica del sistema y la base de datos.
-Los campos incluidos son:
-Campo	Descripción
+El módulo de creación y gestión de usuarios forma parte del Sistema de Gestión de Biblioteca y tiene como finalidad administrar las cuentas de las personas que utilizarán el sistema. El módulo permite registrar usuarios, asignarles un rol, establecer su estado y posteriormente consultar o modificar su información.
+La utilización de roles permite controlar los diferentes niveles de acceso dentro de la aplicación. De esta manera, no todos los usuarios tienen necesariamente las mismas responsabilidades ni los mismos permisos dentro del sistema.
+El módulo se encuentra desarrollado en C# utilizando Windows Forms y está integrado con una clase UsuarioDAO, encargada de realizar las operaciones relacionadas con los usuarios y los roles.
+2. Funcionalidades del módulo
+Actualmente, el módulo permite realizar diferentes operaciones relacionadas con la administración de usuarios:
+Registro de nuevos usuarios.
+Selección del rol correspondiente.
+Selección del estado del usuario.
+Validación de información obligatoria.
+Verificación de la selección de un rol.
+Edición de usuarios existentes.
+Carga de información de un usuario para modificarla.
+Cambio de contraseña.
+Confirmación de la nueva contraseña.
+Activación o desactivación de usuarios.
+Cancelación de la operación.
+Consulta de los roles disponibles desde la base de datos.
+El formulario utiliza diferentes eventos para controlar su funcionamiento. Por ejemplo, al cargarse el formulario se ejecuta el proceso de carga de roles y se establece inicialmente el estado del usuario como Activo.
+3. Diseño del formulario
+El formulario utilizado para esta funcionalidad se denomina FrmRegistroUsuario.
+Su estructura permite introducir y administrar la información necesaria para cada usuario del sistema.
+Entre los principales elementos se encuentran:
+Campo / elemento	Función
+Usuario	Permite establecer el nombre de usuario utilizado para identificarse dentro del sistema.
 Nombre	Permite registrar el nombre del usuario.
-Apellido	Permite registrar el apellido del usuario.
-Correo	Permite registrar la dirección de correo electrónico del usuario.
-Usuario	Permite establecer el nombre que utilizará la persona para identificarse en el sistema.
-Contraseña	Permite establecer las credenciales de acceso del usuario.
-Rol	Permite seleccionar el nivel de privilegios que tendrá el usuario dentro del sistema.
+Rol	Permite seleccionar el rol que tendrá el usuario.
+Estado	Permite establecer si el usuario se encuentra activo o inactivo.
+Contraseña	Permite establecer la contraseña del usuario.
+Confirmación de contraseña	Permite verificar la nueva contraseña introducida.
+Guardar	Permite registrar o actualizar la información del usuario.
+Cancelar	Permite cancelar la operación actual.
 
 
-El formulario también cuenta con los botones Guardar y Limpiar, destinados respectivamente a registrar la información introducida y limpiar los campos del formulario.
-3. Roles del sistema
-Para el Sistema de Gestión de Biblioteca se han establecido tres roles principales:
+El formulario también utiliza campos de contraseña protegidos visualmente para evitar que la información introducida sea mostrada directamente en pantalla.
+4. Gestión de roles
+Una de las características principales del módulo es la asignación de roles.
+A diferencia de una implementación donde los roles se escriben manualmente dentro del formulario, el sistema obtiene los roles mediante UsuarioDAO.ObtenerRoles() y los carga dinámicamente en el ComboBox correspondiente.
+El formulario utiliza:
+nombre_rol como valor que se muestra al usuario.
+id_rol como valor utilizado internamente para identificar el rol.
+Esto permite que los roles sean administrados desde la base de datos y utilizados posteriormente para determinar los privilegios correspondientes.
+Roles del sistema
+De acuerdo con la estructura actual del proyecto, los roles utilizados por el sistema son:
 Administrador
-El administrador tendrá el nivel más alto de privilegios dentro del sistema. Podrá gestionar usuarios y roles, además de tener acceso a las funciones administrativas relacionadas con los libros, préstamos y devoluciones.
 Bibliotecario
-El bibliotecario estará encargado principalmente de las operaciones relacionadas con el funcionamiento diario de la biblioteca. Entre sus funciones se encuentran la gestión de libros, el registro de préstamos y el registro de devoluciones.
-Estudiante
-El estudiante tendrá un nivel de acceso limitado a las funciones que necesita como usuario de la biblioteca. Podrá consultar información de los libros, realizar reservas y consultar información relacionada con sus préstamos.
-4. Funcionamiento general del módulo
-El funcionamiento previsto del módulo comienza cuando un usuario autorizado accede al formulario de registro. En este formulario se introducen los datos personales y las credenciales del nuevo usuario. Posteriormente, se selecciona el rol correspondiente de acuerdo con las funciones que tendrá dentro del sistema.
-El proceso general puede representarse de la siguiente manera:
-          Inicio
-   Formulario de registro
-     Introducir datos
-      Seleccionar rol
-    Validar información 
-    Registrar usuario
-           Fin
-La validación y el almacenamiento de la información serán integrados posteriormente con la lógica de negocio y el acceso a la base de datos.
-5. Relación con la arquitectura de software
-El formulario de creación de usuarios corresponde a la capa de presentación de la arquitectura de la aplicación. Esta capa es la encargada de proporcionar la interfaz mediante la cual el usuario interactúa con el sistema.
-La estructura propuesta para el módulo contempla la separación de responsabilidades de la siguiente manera:
+Usuario
+Los privilegios específicos de cada rol deben mantenerse alineados con las funciones que el equipo haya definido para el sistema.
+5. Gestión del estado del usuario
+Además del rol, el formulario permite establecer el estado de cada cuenta.
+Actualmente se manejan dos estados:
+Activo
+Inactivo
+Al crear un usuario, el formulario establece inicialmente el estado Activo. Cuando se edita un usuario existente, el sistema carga su estado actual y permite modificarlo.
+Esta funcionalidad permite desactivar una cuenta sin necesidad de eliminarla completamente del sistema.
+6. Validaciones del formulario
+El módulo incorpora validaciones antes de realizar el registro o modificación de un usuario.
+Entre ellas se encuentra la comprobación de que se hayan introducido los datos básicos del usuario. Si los campos requeridos no están completos, el sistema muestra un mensaje de advertencia y detiene el proceso.
+También se verifica que el usuario haya seleccionado un rol antes de continuar y que se haya seleccionado un estado.
+Estas validaciones permiten reducir errores durante el registro y evitar que se almacene información incompleta.
+7. Edición de usuarios
+El módulo no se limita al registro de usuarios nuevos. También permite cargar la información de un usuario existente para modificarla.
+Cuando se recibe el identificador del usuario, FrmRegistroUsuario utiliza UsuarioDAO.ObtenerUsuario(idUsuario) para recuperar la información correspondiente.
+Posteriormente, los datos recuperados son colocados nuevamente en los controles del formulario, incluyendo el usuario, nombre, rol y estado.
+Cuando se encuentra en modo edición, el título del formulario cambia a:
+“Editar Usuario”
+También se permite establecer una nueva contraseña o dejar los campos correspondientes vacíos para conservar la contraseña existente.
+8. Acceso a datos mediante UsuarioDAO
+Para separar la interfaz de usuario de las operaciones relacionadas con la base de datos se utiliza la clase:
+UsuarioDAO
+El patrón DAO, o Data Access Object, permite concentrar las operaciones de acceso a los datos en una clase específica.
+De esta manera, FrmRegistroUsuario se encarga principalmente de la interacción con el usuario, mientras que UsuarioDAO se ocupa de las operaciones relacionadas con la información almacenada.
+Entre las operaciones utilizadas por el módulo se encuentra la obtención de roles y la consulta de información de usuarios.
+9. Relación con la arquitectura de la aplicación
+El módulo se integra dentro de una estructura en la que las responsabilidades se encuentran separadas.
+De forma general, el flujo puede representarse de la siguiente manera:
 
 PRESENTACIÓN          
-                              
-Formulario de usuarios       
+FrmRegistroUsuario      
+
                
-LÓGICA DE NEGOCIO       
-                              
-Validación y gestión        
-de usuarios y roles          
-            
 ACCESO A DATOS         
                               
-UsuarioDAO          
+UsuarioDAO           
+              
 
-BASE DE DATOS         
+BASE DE DATOS          
+                               
+Usuarios / Roles          
 
-Esta organización permite mantener separada la interfaz del usuario de las operaciones relacionadas con los datos. De acuerdo con la estructura definida por el equipo, el acceso a los datos se realizará mediante el patrón DAO (Data Access Object).
-En el estado actual del proyecto, el formulario representa principalmente la parte de presentación. La conexión con las demás capas será realizada durante la integración del módulo.
-6. Tecnologías utilizadas
-Para el desarrollo del módulo se está utilizando:
+El formulario pertenece a la parte de presentación, mientras que UsuarioDAO concentra las operaciones de acceso a datos.
+Esta separación facilita que los cambios realizados en la interfaz no tengan que modificar directamente todas las operaciones relacionadas con la base de datos.
+10. Flujo general del registro
+El funcionamiento general del módulo puede resumirse de la siguiente manera:
+Inicio
+  
+  
+Abrir formulario
+  
+  
+Cargar roles
+  
+  
+Introducir información
+  
+  
+Seleccionar rol
+  
+  
+Seleccionar estado
+  
+  
+Validar información
+  
+Información incorrecta
+          
+Mostrar aviso
+  
+  
+UsuarioDAO
+  
+  
+Base de datos
+  
+  
+Usuario registrado/actualizado
+Cuando el formulario se abre, se cargan los roles disponibles mediante UsuarioDAO. Posteriormente, el usuario introduce la información correspondiente y el sistema realiza las validaciones antes de continuar con la operación.
+11. Seguridad
+El módulo contempla medidas relacionadas con la protección de las credenciales del usuario.
+Las contraseñas se manejan mediante campos protegidos visualmente en el formulario. Además, la gestión de usuarios se realiza mediante el UsuarioDAO, evitando colocar directamente las operaciones de base de datos dentro del código de la interfaz.
+La asignación de roles también constituye un mecanismo importante de seguridad, ya que permite establecer diferentes niveles de acceso dentro del sistema.
+12. Tecnologías utilizadas
+Para el desarrollo del módulo se utilizan las siguientes tecnologías:
 Lenguaje: C#
-Entorno de desarrollo: Visual Studio Community 2026
-Tecnología de interfaz: Windows Forms
+Interfaz gráfica: Windows Forms
+Entorno de desarrollo: Visual Studio
+Base de datos: PostgreSQL
+Acceso a datos: Npgsql
+Patrón de acceso a datos: DAO
 Control de versiones: Git y GitHub
-Arquitectura: 
-Acceso a datos: patrón DAO, según la estructura definida para el proyecto.
-7. Estado actual del módulo
-Actualmente se encuentra diseñado el formulario de creación de usuarios, incluyendo los campos necesarios para registrar los datos del usuario y el selector de roles.
-La parte correspondiente a la programación de las validaciones, almacenamiento de los datos y conexión con la base de datos será desarrollada posteriormente como parte de la integración del módulo.
-8. Evidencia del desarrollo
+13. Estado actual del módulo
+A diferencia de la primera versión de la documentación, el módulo ya no se encuentra solamente en etapa de diseño visual.
+Actualmente cuenta con implementación para:
+Cargar roles.
+Registrar usuarios.
+Validar información.
+Consultar usuarios.
+Editar usuarios.
+Gestionar estados.
+Gestionar contraseñas.
+Trabajar con UsuarioDAO.
+Interactuar con la base de datos.
+Por lo tanto, el módulo puede considerarse una funcionalidad desarrollada e integrada al proyecto, aunque todavía puede continuar ampliándose conforme avance el sistema.
+14. Evidencias del desarrollo
+Para la documentación final se recomienda incluir capturas de:
+Figura 1. Formulario de registro de usuarios.
+Insertar captura de FrmRegistroUsuario.
 
-Captura del formulario:
+Figura 2. Formulario de gestión/listado de usuarios.
+Insertar captura de la pantalla donde se visualizan los usuarios.
+
+Figura 3. Inicio de sesión.
+Insertar captura de frmLogin.
+
+Figura 4. Sistema funcionando después del inicio de sesión.
+Insertar captura de frmMain.
