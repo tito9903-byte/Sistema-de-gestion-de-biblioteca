@@ -37,7 +37,12 @@ namespace SistemaDeGestionDeBiblioteca.Conexion
                 {
                     conexion.Open();
 
-                    return TieneTablas(conexion);
+                    if (!TieneTablas(conexion))
+                        return false;
+
+                    AsegurarAdministrador(conexion);
+
+                    return true;
                 }
             }
             catch (Exception ex)
@@ -116,6 +121,8 @@ namespace SistemaDeGestionDeBiblioteca.Conexion
                         foreach (string script in Scripts)
                             EjecutarScript(conexion, script);
                     }
+
+                    AsegurarAdministrador(conexion);
                 }
 
 
@@ -127,6 +134,42 @@ namespace SistemaDeGestionDeBiblioteca.Conexion
             catch (Exception ex)
             {
                 return Traducir(ex, cadena.ConnectionString);
+            }
+        }
+
+
+        // Si la base no tiene ningún usuario con rol Administrador (por
+        // ejemplo, una base que ya existía con otros usuarios), crea el
+        // administrador inicial "admin" (contraseña inicial en tablas_base.sql;
+        // pasa al formato seguro en el primer inicio de sesión). Si ya hay
+        // algún administrador, no hace nada. Es una ayuda: si falla, no
+        // impide abrir la aplicación.
+        private static void AsegurarAdministrador(NpgsqlConnection conexion)
+        {
+            try
+            {
+                using (NpgsqlCommand comando = new NpgsqlCommand(
+                    @"INSERT INTO roles (nombre_rol) VALUES ('Administrador')
+                      ON CONFLICT (nombre_rol) DO NOTHING;
+
+                      INSERT INTO usuarios (usuario, nombre, password_hash, id_rol, estado)
+                      SELECT CASE WHEN EXISTS (SELECT 1 FROM usuarios WHERE usuario = 'admin')
+                                  THEN 'admin_inicial' ELSE 'admin' END,
+                             'Administrador',
+                             upper(encode(sha256(convert_to('Admin123', 'UTF8')), 'hex')),
+                             r.id_rol,
+                             true
+                      FROM roles r
+                      WHERE r.nombre_rol = 'Administrador'
+                        AND NOT EXISTS (SELECT 1 FROM usuarios u WHERE u.id_rol = r.id_rol)
+                        AND NOT EXISTS (SELECT 1 FROM usuarios WHERE usuario = 'admin_inicial');",
+                    conexion))
+                {
+                    comando.ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 

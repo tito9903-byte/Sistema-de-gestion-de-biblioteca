@@ -180,7 +180,7 @@ Sistema-de-gestion-de-biblioteca/
    - ejecuta los scripts de `Database/` (incluidos dentro del programa): `tablas_base.sql`, `schema.sql`, `usuarios_equipo.sql` y `datos_ejemplo.sql`;
    - guarda la configuración en `%LOCALAPPDATA%\SistemaGestionBiblioteca\conexion.local.txt`, fuera del repositorio, para no volver a preguntar.
 4. **Iniciar sesión.** Con los datos de ejemplo existen estos usuarios:
-   - `admin` (Administrador). Su contraseña inicial está indicada en `Database/tablas_base.sql`; cámbiela después del primer inicio de sesión.
+   - `admin` (Administrador). Su contraseña inicial está indicada en `Database/tablas_base.sql`; cámbiela después del primer inicio de sesión. Si la base de datos ya existía y no tiene ningún Administrador, la aplicación lo crea al arrancar (con el nombre `admin`, o `admin_inicial` si `admin` ya estaba en uso).
    - `luis.garcia`, `brian.lora`, `elio.dilone` y `eduardo.tejada` (rol Usuario), usados para las pruebas. Sus contraseñas iniciales están en `Database/usuarios_equipo.sql`.
 
 **Configuración manual (opcional).** En lugar de la ventana de primer uso se puede copiar `conexion.ejemplo.txt` como `conexion.local.txt` (junto al `.csproj`) o definir la variable de entorno `BIBLIOTECA_CONEXION` con la cadena de conexión. También se pueden ejecutar los scripts de `Database/` a mano con pgAdmin o `psql`, en el orden indicado arriba.
