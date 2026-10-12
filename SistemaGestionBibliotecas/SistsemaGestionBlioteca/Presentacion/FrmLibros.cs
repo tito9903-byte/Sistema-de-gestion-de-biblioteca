@@ -116,7 +116,7 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
             FrmRegistroLibro formulario =
                 new FrmRegistroLibro();
 
-            if (formulario.ShowDialog() ==
+            if (formulario.ShowDialog(Centrado.Ventana()) ==
                 DialogResult.OK)
             {
                 CargarResumen();
@@ -141,7 +141,7 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
                     Convert.ToInt32(libro["id_libro"])
                 );
 
-            if (formulario.ShowDialog() ==
+            if (formulario.ShowDialog(Centrado.Ventana()) ==
                 DialogResult.OK)
             {
                 CargarResumen();

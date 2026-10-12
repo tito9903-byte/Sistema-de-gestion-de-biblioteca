@@ -25,6 +25,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // desde y hasta incluyen ambos días.
         public Indicadores ObtenerIndicadores(DateOnly desde, DateOnly hasta)
         {
+            Permisos.RequerirGestion();
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -78,6 +79,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
             DateOnly desde,
             DateOnly hasta)
         {
+            Permisos.RequerirGestion();
             DateOnly inicio = new DateOnly(hasta.Year, 1, 1);
 
             if (desde < inicio)
@@ -131,6 +133,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
             DateOnly hasta,
             int cantidad)
         {
+            Permisos.RequerirGestion();
             (string origen, string fecha, string libro) = Origen(tipo);
 
             DataTable tabla = new DataTable();

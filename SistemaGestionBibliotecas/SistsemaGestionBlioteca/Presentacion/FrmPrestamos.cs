@@ -157,7 +157,7 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
             FrmNuevoPrestamo formulario =
                 new FrmNuevoPrestamo();
 
-            if (formulario.ShowDialog() ==
+            if (formulario.ShowDialog(Centrado.Ventana()) ==
                 DialogResult.OK)
             {
                 Actualizar();

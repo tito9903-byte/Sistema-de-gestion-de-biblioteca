@@ -1,0 +1,3 @@
+# Copie este archivo como conexion.local.txt (junto al .csproj) y complete sus datos.
+# conexion.local.txt NO se sube a Git. Una sola linea con la cadena de conexion:
+Host=localhost;Port=5432;Database=BibliotecaDB;Username=postgres;Password=SU_CONTRASENA;

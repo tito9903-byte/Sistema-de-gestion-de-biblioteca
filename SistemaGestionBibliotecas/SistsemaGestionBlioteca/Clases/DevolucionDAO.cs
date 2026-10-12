@@ -16,6 +16,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // idUsuario = null para ver todas; con valor, solo las de ese lector.
         public ResumenDevoluciones ObtenerResumen(int? idUsuario)
         {
+            idUsuario = Permisos.Limitar(idUsuario);
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -51,6 +52,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // "A tiempo" / "Con retraso" no se guarda: se deduce de dias_retraso.
         public DataTable ListarDevoluciones(string texto, int? idUsuario)
         {
+            idUsuario = Permisos.Limitar(idUsuario);
             DataTable tabla = new DataTable();
 
             string patron =
@@ -111,6 +113,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // Solo marca como pagada si la devolución tiene multa.
         public bool MarcarMultaPagada(int idDevolucion)
         {
+            Permisos.RequerirGestion();
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();

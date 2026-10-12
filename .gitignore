@@ -15,3 +15,5 @@
 *.nuget.g.props
 *.nuget.g.targets
 project.assets.json
+# Configuracion local de la base de datos (contiene la contrasena)
+conexion.local.txt

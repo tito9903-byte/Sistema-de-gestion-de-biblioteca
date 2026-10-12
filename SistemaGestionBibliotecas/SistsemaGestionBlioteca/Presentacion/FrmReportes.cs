@@ -211,7 +211,7 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
                     "Reporte_" + ultimoTipo + "_" +
                     DateTime.Today.ToString("yyyyMMdd") + ".pdf";
 
-                if (dialogo.ShowDialog() != DialogResult.OK)
+                if (dialogo.ShowDialog(Centrado.Ventana()) != DialogResult.OK)
                     return;
 
 

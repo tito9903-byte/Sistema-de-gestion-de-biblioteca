@@ -13,6 +13,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Scripts SQL incluidos en el programa para crear la base de datos. -->
+    <EmbeddedResource Include="Database\tablas_base.sql" LogicalName="Database.tablas_base.sql" />
+    <EmbeddedResource Include="Database\schema.sql" LogicalName="Database.schema.sql" />
+    <EmbeddedResource Include="Database\usuarios_equipo.sql" LogicalName="Database.usuarios_equipo.sql" />
+    <EmbeddedResource Include="Database\datos_ejemplo.sql" LogicalName="Database.datos_ejemplo.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="conexion.local.txt" Condition="Exists('conexion.local.txt')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

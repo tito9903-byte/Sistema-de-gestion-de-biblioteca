@@ -161,7 +161,7 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
             FrmRegistrarDevolucion formulario =
                 new FrmRegistrarDevolucion();
 
-            if (formulario.ShowDialog() ==
+            if (formulario.ShowDialog(Centrado.Ventana()) ==
                 DialogResult.OK)
             {
                 Actualizar();

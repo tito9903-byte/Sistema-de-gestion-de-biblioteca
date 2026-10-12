@@ -90,7 +90,7 @@ Los roles se guardan en la tabla `roles` y se aplican en la interfaz.
 | Ver préstamos, devoluciones y reservas | Todos | Todos | Solo los propios |
 | Crear y cancelar reservas | Para cualquier lector | Para cualquier lector | Solo para sí mismo |
 
-> Los permisos se controlan únicamente en la interfaz (botones y secciones visibles). No existen restricciones a nivel de base de datos.
+> Los permisos se aplican en la interfaz (botones y secciones visibles) y también en la capa de acceso a datos (`Clases/Permisos.cs`), que rechaza las operaciones no permitidas para el rol de la sesión. No se aplican restricciones con roles de PostgreSQL: la aplicación se conecta con una sola cuenta de base de datos.
 
 ## Arquitectura
 
@@ -101,7 +101,7 @@ El código está separado en capas y usa el patrón **DAO (Data Access Object)**
 | Presentación | `Presentacion/` | Formularios y controles. Gestionan la interacción y las validaciones de pantalla. |
 | Acceso a datos y reglas | `Clases/` | Una clase DAO por entidad (`UsuarioDAO`, `LibroDAO`, `PrestamoDAO`, `DevolucionDAO`, `ReservaDAO`, `ReporteDAO`, `InicioDAO`). Contienen las consultas SQL y las reglas de negocio (límites, multas, renovaciones). |
 | Conexión | `Conexion/` | `ConexionBD` crea las conexiones Npgsql. |
-| Sesión | `Clases/Sesion.cs` | Guarda el usuario autenticado durante la ejecución. |
+| Sesión y permisos | `Clases/Sesion.cs`, `Clases/Permisos.cs` | Guardan el usuario autenticado y validan el rol antes de cada operación. |
 
 Los formularios no ejecutan SQL: llaman a los DAO. Las operaciones que modifican varias tablas (por ejemplo, registrar una devolución y actualizar los ejemplares disponibles) se ejecutan dentro de transacciones.
 
@@ -116,6 +116,7 @@ Sistema-de-gestion-de-biblioteca/
     └── SistsemaGestionBlioteca/
         ├── SistemaDeGestionDeBiblioteca.csproj
         ├── Program.cs
+        ├── conexion.ejemplo.txt         # Plantilla de la cadena de conexión (conexion.local.txt no se sube a Git)
         ├── Clases/
         │   ├── UsuarioDAO.cs
         │   ├── LibroDAO.cs
@@ -124,14 +125,19 @@ Sistema-de-gestion-de-biblioteca/
         │   ├── ReservaDAO.cs
         │   ├── ReporteDAO.cs
         │   ├── InicioDAO.cs
-        │   └── Sesion.cs
+        │   ├── Sesion.cs
+        │   ├── Permisos.cs
+        │   └── MessageBox.cs            # Avisos centrados sobre la ventana de la aplicación
         ├── Conexion/
-        │   └── ConexionBD.cs
+        │   ├── ConexionBD.cs
+        │   └── PreparadorBD.cs          # Crea la base de datos y las tablas en el primer uso
         ├── Database/
+        │   ├── tablas_base.sql          # Tablas roles y usuarios, roles y administrador inicial
         │   ├── schema.sql               # Tablas de libros, préstamos, devoluciones y reservas
         │   └── datos_ejemplo.sql        # Datos de prueba (opcional)
         ├── Presentacion/
         │   ├── frmLogin.cs
+        │   ├── FrmConfigurarBD.cs       # Ventana de configuración de PostgreSQL (primer uso)
         │   ├── frmMain.cs
         │   ├── FrmInicio.cs
         │   ├── FrmUsuarios.cs / FrmRegistroUsuario.cs
@@ -155,7 +161,7 @@ Sistema-de-gestion-de-biblioteca/
 ### Requisitos
 - Windows 10 u 11.
 - Visual Studio con la carga de trabajo de **desarrollo de escritorio de .NET** y compatibilidad con .NET 10 (SDK 10).
-- PostgreSQL y pgAdmin (o `psql`).
+- PostgreSQL instalado y en ejecución, con un usuario que pueda crear bases de datos (por ejemplo `postgres`).
 
 ### Pasos
 
@@ -164,17 +170,20 @@ Sistema-de-gestion-de-biblioteca/
    git clone https://github.com/tito9903-byte/Sistema-de-gestion-de-biblioteca.git
    git checkout feature/interfaces-ui
    ```
-2. **Crear la base de datos** `BibliotecaDB` en PostgreSQL.
-3. **Crear las tablas `roles` y `usuarios`.** El código espera estas columnas: `roles(id_rol, nombre_rol)` y `usuarios(id_usuario, usuario, nombre, password_hash, id_rol, estado)`. Los roles deben llamarse exactamente `Administrador`, `Bibliotecario` y `Usuario`. Estas dos tablas no tienen todavía un script en el repositorio.
-4. **Ejecutar `Database/schema.sql`** en la base de datos. Es idempotente y no modifica `roles` ni `usuarios`.
-5. **Crear al menos un usuario administrador.** La contraseña se almacena como SHA-256 en hexadecimal y mayúsculas en `password_hash`.
-6. *(Opcional)* Ejecutar `Database/datos_ejemplo.sql`. Inserta libros, préstamos, devoluciones y reservas de prueba y asigna los préstamos y reservas a los usuarios con rol `Usuario` que ya existan. Si ya hay libros, no hace nada.
-7. **Configurar la conexión** en `Conexion/ConexionBD.cs` con el servidor, puerto, base de datos, usuario y contraseña de su propia instancia de PostgreSQL. No publique credenciales reales en el repositorio.
-8. **Abrir y ejecutar:** abrir `SistemaDeGestionDeBiblioteca.csproj` en Visual Studio y ejecutar con **F5**, o desde la terminal:
+2. **Abrir y ejecutar:** abrir `SistemaDeGestionDeBiblioteca.csproj` en Visual Studio y ejecutar con **F5**, o desde la terminal:
    ```bash
    cd SistemaGestionBibliotecas/SistsemaGestionBlioteca
    dotnet run
    ```
+3. **Configuración automática en el primer uso.** Si no hay una base de datos configurada, la aplicación muestra la ventana «Configurar la base de datos». Escriba el servidor, el puerto, el usuario y la contraseña de su PostgreSQL (la base se llama `BibliotecaDB` por defecto) y pulse **Conectar**. La aplicación:
+   - crea la base de datos si no existe;
+   - ejecuta los scripts de `Database/` (incluidos dentro del programa): `tablas_base.sql`, `schema.sql`, `usuarios_equipo.sql` y `datos_ejemplo.sql`;
+   - guarda la configuración en `%LOCALAPPDATA%\SistemaGestionBiblioteca\conexion.local.txt`, fuera del repositorio, para no volver a preguntar.
+4. **Iniciar sesión.** Con los datos de ejemplo existen estos usuarios:
+   - `admin` (Administrador). Su contraseña inicial está indicada en `Database/tablas_base.sql`; cámbiela después del primer inicio de sesión.
+   - `luis.garcia`, `brian.lora`, `elio.dilone` y `eduardo.tejada` (rol Usuario), usados para las pruebas. Sus contraseñas iniciales están en `Database/usuarios_equipo.sql`.
+
+**Configuración manual (opcional).** En lugar de la ventana de primer uso se puede copiar `conexion.ejemplo.txt` como `conexion.local.txt` (junto al `.csproj`) o definir la variable de entorno `BIBLIOTECA_CONEXION` con la cadena de conexión. También se pueden ejecutar los scripts de `Database/` a mano con pgAdmin o `psql`, en el orden indicado arriba.
 
 ## Capturas del sistema
 
@@ -196,28 +205,33 @@ Las capturas reales del sistema en ejecución están pendientes de incorporar. L
 | Aspecto | Estado |
 |---|---|
 | Compilación del proyecto (`dotnet build`) | Correcta, sin errores ni advertencias |
-| Aplicación de `schema.sql` y `datos_ejemplo.sql` en PostgreSQL local | Correcta |
-| Visualización de los datos en cada pantalla | Pendiente de verificar de forma sistemática |
-| Inicio de sesión y gestión de usuarios | Desarrollados desde la primera entrega; falta una prueba formal de todos los casos |
-| Operaciones de escritura (registrar préstamo, renovar, devolver, multas, reservas, alta/edición/baja de libros) | **Pendiente de pruebas funcionales** |
-| Permisos por rol en la interfaz | **Pendiente de probar** con una cuenta de cada rol |
+| Creación de la base desde cero (`tablas_base.sql`, `schema.sql`, `datos_ejemplo.sql`) | Correcta, y repetible sin errores |
+| Inicio de sesión, aviso por credenciales incorrectas y acceso por rol | Verificado con ejecución real de las ventanas sobre una copia de la base |
+| Registro de usuarios, libros (alta y edición), préstamos, renovaciones, devoluciones con multa, reservas y reportes | Verificado a nivel de lógica y base de datos |
+| Validación de campos obligatorios en los formularios | Verificada en libro, préstamo, reserva, devolución y usuario |
+| Navegación por todos los módulos con cada rol | Verificada sin errores |
+| Permisos por rol en el acceso a datos (Administrador, Bibliotecario, Usuario) | Verificados |
+| Contraseñas con PBKDF2 y sal, y actualización automática de hashes antiguos | Verificado |
+| Avisos y ventanas centrados sobre la aplicación | Verificado |
+| Configuración automática de la base de datos en una copia limpia del proyecto (contraseña incorrecta, servidor caído, base nueva, base vacía y repetición) | Verificado |
+| Recorrido manual con mouse y teclado de cada pantalla | **Pendiente** |
 | Exportación de reportes a PDF | **Pendiente de probar** |
-| Pruebas automatizadas | No existen |
+| Rendimiento con grandes volúmenes de datos | **Sin medir** |
+| Pruebas automatizadas dentro del repositorio | No existen (las verificaciones se ejecutaron de forma externa) |
 
 ## Estado del proyecto
 
 | Parte | Estado |
 |---|---|
 | Inicio de sesión, panel principal y menú por rol | Implementado |
-| Usuarios, Libros, Préstamos, Devoluciones, Reservas y Reportes | Implementado, con pruebas funcionales pendientes |
+| Usuarios, Libros, Préstamos, Devoluciones, Reservas y Reportes | Implementado y verificado con pruebas ejecutadas; falta el recorrido manual con capturas |
 | Recuperación de contraseña | No implementada |
 | Envío real de notificaciones de reservas | No implementado (solo se registra) |
 
 **Mejoras pendientes**
-- Mover las credenciales de la base de datos fuera del código fuente (archivo de configuración o variables de entorno).
-- Reemplazar el hash SHA-256 simple por un algoritmo con sal, como bcrypt o Argon2.
-- Aplicar los permisos también en el servidor o la base de datos, no solo en la interfaz.
-- Agregar un script para las tablas `roles` y `usuarios`.
+- Cambiar la contraseña de PostgreSQL que estuvo escrita en el código: sigue visible en el historial de Git.
+- Usar roles de PostgreSQL con permisos limitados en lugar de una sola cuenta de base de datos.
+- Medir el rendimiento con un volumen grande de datos y verificar el sistema en otros equipos.
 - Corregir la ruta del proyecto en `SistemaDeBiblioteca.slnx`, que apunta a una carpeta anterior.
 - Agregar pruebas automatizadas e incorporar las capturas reales del sistema.
 

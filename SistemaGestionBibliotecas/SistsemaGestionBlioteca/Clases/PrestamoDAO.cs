@@ -31,6 +31,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // idUsuario = null para ver todos; con valor, solo los de ese lector.
         public ResumenPrestamos ObtenerResumen(int? idUsuario)
         {
+            idUsuario = Permisos.Limitar(idUsuario);
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -67,6 +68,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // "Vencido" no se guarda: se calcula por la fecha de vencimiento.
         public DataTable ListarPrestamos(string texto, int? idUsuario)
         {
+            idUsuario = Permisos.Limitar(idUsuario);
             DataTable tabla = new DataTable();
 
             string patron =
@@ -164,6 +166,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
 
         public DataTable ObtenerLibrosDisponibles()
         {
+            Permisos.RequerirGestion();
             DataTable tabla = new DataTable();
 
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
@@ -199,6 +202,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
             string? observacion,
             int idUsuarioRegistro)
         {
+            Permisos.RequerirGestion();
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -329,6 +333,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
 
         public string? Renovar(int idPrestamo)
         {
+            Permisos.RequerirGestion();
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -428,6 +433,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
             int idPrestamo,
             int idUsuarioRegistro)
         {
+            Permisos.RequerirGestion();
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -543,6 +549,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // Préstamos pendientes de devolver (para el formulario de devolución).
         public DataTable ObtenerPrestamosActivos()
         {
+            Permisos.RequerirGestion();
             DataTable tabla = new DataTable();
 
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())

@@ -22,6 +22,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // idUsuario = null para ver todas; con valor, solo las de ese lector.
         public ResumenReservas ObtenerResumen(int? idUsuario)
         {
+            idUsuario = Permisos.Limitar(idUsuario);
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -60,6 +61,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // "Por vencer" y "Vencida" no se guardan: se calculan por la fecha.
         public DataTable ListarReservas(string texto, int? idUsuario)
         {
+            idUsuario = Permisos.Limitar(idUsuario);
             DataTable tabla = new DataTable();
 
             string patron =
@@ -153,6 +155,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
             int dias,
             string prioridad)
         {
+            Permisos.RequerirPropioOGestion(idUsuario);
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -258,6 +261,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
 
         public string? Confirmar(int idReserva)
         {
+            Permisos.RequerirGestion();
             return Actualizar(
                 @"UPDATE reservas
                   SET estado = 'Confirmada'
@@ -272,13 +276,19 @@ namespace SistemaDeGestionDeBiblioteca.Clases
 
         public string? Cancelar(int idReserva)
         {
+            // El lector solo cancela sus propias reservas (id de la sesión: entero).
+            string soloPropias =
+                Permisos.PuedeGestionar
+                    ? ""
+                    : " AND id_usuario = " + Sesion.IdUsuario;
+
             return Actualizar(
                 @"UPDATE reservas
                   SET estado = 'Cancelada'
                   WHERE id_reserva = @id
-                    AND estado IN ('Activa', 'Confirmada')",
+                    AND estado IN ('Activa', 'Confirmada')" + soloPropias,
                 idReserva,
-                "Solo se pueden cancelar reservas activas o confirmadas."
+                "Solo se pueden cancelar reservas propias activas o confirmadas."
             );
         }
 
@@ -286,6 +296,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
         // Solo deja registrado que se notificó; no envía correo ni mensaje.
         public string? Notificar(int idReserva)
         {
+            Permisos.RequerirGestion();
             return Actualizar(
                 @"UPDATE reservas
                   SET notificado = true

@@ -196,6 +196,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
             int ejemplares,
             bool estado)
         {
+            Permisos.RequerirGestion();
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -248,6 +249,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
             int ejemplares,
             bool estado)
         {
+            Permisos.RequerirGestion();
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -320,6 +322,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
 
         public bool EliminarLibro(int idLibro)
         {
+            Permisos.RequerirGestion();
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();
@@ -339,6 +342,7 @@ namespace SistemaDeGestionDeBiblioteca.Clases
 
         public bool CambiarEstado(int idLibro, bool estado)
         {
+            Permisos.RequerirGestion();
             using (NpgsqlConnection conexion = ConexionBD.ObtenerConexion())
             {
                 conexion.Open();

@@ -179,7 +179,7 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
             FrmNuevaReserva formulario =
                 new FrmNuevaReserva(FiltroUsuario());
 
-            if (formulario.ShowDialog() ==
+            if (formulario.ShowDialog(Centrado.Ventana()) ==
                 DialogResult.OK)
             {
                 Actualizar();
