@@ -45,30 +45,26 @@
             // 
             panel2.Controls.Add(panelContenedor);
             panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(210, 0);
-            panel2.Margin = new Padding(3, 2, 3, 2);
+            panel2.Location = new Point(240, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(908, 697);
+            panel2.Size = new Size(1038, 929);
             panel2.TabIndex = 3;
             // 
             // panelContenedor
             // 
             panelContenedor.Dock = DockStyle.Fill;
             panelContenedor.Location = new Point(0, 0);
-            panelContenedor.Margin = new Padding(3, 2, 3, 2);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(908, 697);
+            panelContenedor.Size = new Size(1038, 929);
             panelContenedor.TabIndex = 1;
-           // panelContenedor.Paint += panelContenedor_Paint;
             // 
             // panelBottom
             // 
             panelBottom.Controls.Add(btnCerrarSesión);
             panelBottom.Dock = DockStyle.Bottom;
-            panelBottom.Location = new Point(0, 603);
-            panelBottom.Margin = new Padding(3, 2, 3, 2);
+            panelBottom.Location = new Point(0, 804);
             panelBottom.Name = "panelBottom";
-            panelBottom.Size = new Size(210, 94);
+            panelBottom.Size = new Size(240, 125);
             panelBottom.TabIndex = 7;
             // 
             // btnCerrarSesión
@@ -79,9 +75,8 @@
             btnCerrarSesión.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
             btnCerrarSesión.ForeColor = SystemColors.ButtonHighlight;
             btnCerrarSesión.Location = new Point(0, 0);
-            btnCerrarSesión.Margin = new Padding(3, 2, 3, 2);
             btnCerrarSesión.Name = "btnCerrarSesión";
-            btnCerrarSesión.Size = new Size(210, 52);
+            btnCerrarSesión.Size = new Size(240, 69);
             btnCerrarSesión.TabIndex = 7;
             btnCerrarSesión.Text = "🔁Cerrar sesión";
             btnCerrarSesión.UseVisualStyleBackColor = true;
@@ -93,9 +88,8 @@
             panelButtons.Controls.Add(btnUsuarios);
             panelButtons.Dock = DockStyle.Fill;
             panelButtons.Location = new Point(0, 0);
-            panelButtons.Margin = new Padding(3, 2, 3, 2);
             panelButtons.Name = "panelButtons";
-            panelButtons.Size = new Size(210, 697);
+            panelButtons.Size = new Size(240, 929);
             panelButtons.TabIndex = 0;
             // 
             // btnUsuarios
@@ -106,9 +100,8 @@
             btnUsuarios.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold);
             btnUsuarios.ForeColor = SystemColors.ButtonHighlight;
             btnUsuarios.Location = new Point(0, 0);
-            btnUsuarios.Margin = new Padding(3, 2, 3, 2);
             btnUsuarios.Name = "btnUsuarios";
-            btnUsuarios.Size = new Size(210, 52);
+            btnUsuarios.Size = new Size(240, 69);
             btnUsuarios.TabIndex = 5;
             btnUsuarios.Text = "👤 Usuarios";
             btnUsuarios.UseVisualStyleBackColor = true;
@@ -120,18 +113,18 @@
             panelMenu.Controls.Add(panelButtons);
             panelMenu.Dock = DockStyle.Left;
             panelMenu.Location = new Point(0, 0);
-            panelMenu.Margin = new Padding(3, 2, 3, 2);
             panelMenu.Name = "panelMenu";
-            panelMenu.Size = new Size(210, 697);
+            panelMenu.Size = new Size(240, 929);
             panelMenu.TabIndex = 2;
             // 
             // frmMain
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1118, 697);
+            ClientSize = new Size(1278, 929);
             Controls.Add(panel2);
             Controls.Add(panelMenu);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "frmMain";
             StartPosition = FormStartPosition.WindowsDefaultBounds;
             Text = "frmMain";
