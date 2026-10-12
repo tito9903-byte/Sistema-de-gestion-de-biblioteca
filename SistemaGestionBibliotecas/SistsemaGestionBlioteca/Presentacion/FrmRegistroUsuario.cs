@@ -10,6 +10,11 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
         int idUsuario = 0;
 
 
+        // Cuando el formulario se muestra dentro de FrmUsuarios, avisa que
+        // terminó (true = se guardó). Si nadie escucha, se cierra como diálogo.
+        public event Action<bool>? Finalizado;
+
+
         public FrmRegistroUsuario()
         {
             InitializeComponent();
@@ -288,10 +293,7 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
                         );
 
 
-                        DialogResult =
-                            DialogResult.OK;
-
-                        Close();
+                        Terminar(true);
                     }
                 }
 
@@ -366,10 +368,7 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
                         );
 
 
-                        DialogResult =
-                            DialogResult.OK;
-
-                        Close();
+                        Terminar(true);
                     }
                 }
             }
@@ -389,7 +388,63 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
             object? sender,
             EventArgs e)
         {
+            Terminar(false);
+        }
+        private void Terminar(bool guardado)
+        {
+            if (Finalizado != null)
+            {
+                Finalizado(guardado);
+
+                return;
+            }
+
+            if (guardado)
+                DialogResult = DialogResult.OK;
+
             Close();
+        }
+
+
+        // Nuevo usuario: vacía los campos. Edición: vuelve a cargar los datos.
+        private void btnLimpiar_Click(
+            object? sender,
+            EventArgs e)
+        {
+            if (idUsuario > 0)
+            {
+                CargarUsuario();
+
+                return;
+            }
+
+            txtUsuario.Clear();
+            txtNombre.Clear();
+            txtPassword.Clear();
+            txtPassword2.Clear();
+
+            cmbRol.SelectedIndex = -1;
+            cmbEstado.SelectedIndex = 0;
+
+            txtNombre.Focus();
+        }
+
+
+        private void lblMostrarPassword_Click(
+            object? sender,
+            EventArgs e)
+        {
+            bool ocultar = !txtPassword.UseSystemPasswordChar;
+
+            txtPassword.UseSystemPasswordChar = ocultar;
+            txtPassword2.UseSystemPasswordChar = ocultar;
+
+            // Ojo tachado = contraseña oculta.
+            lblMostrarPassword.Font =
+                new Font(
+                    lblMostrarPassword.Font,
+                    ocultar ? FontStyle.Strikeout : FontStyle.Regular
+                );
         }
     }
 }

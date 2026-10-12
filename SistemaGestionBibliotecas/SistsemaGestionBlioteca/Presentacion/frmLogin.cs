@@ -13,12 +13,7 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
             InitializeComponent();
 
             txtUser.Text = "";
-            txtUser.PlaceholderText = "Usuario";
-            txtUser.ForeColor = Color.Black;
-
             txtPass.Text = "";
-            txtPass.PlaceholderText = "Contraseña";
-            txtPass.ForeColor = Color.Black;
             txtPass.UseSystemPasswordChar = true;
         }
 
@@ -64,6 +59,13 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
                         resultado.Rows[0]["nombre_rol"]?.ToString() ?? "";
 
 
+                    Sesion.Iniciar(
+                        Convert.ToInt32(resultado.Rows[0]["id_usuario"]),
+                        nombre,
+                        rol
+                    );
+
+
                     frmMain principal =
                         new frmMain(nombre, rol);
 
@@ -71,6 +73,8 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
                     Hide();
 
                     principal.ShowDialog();
+
+                    Sesion.Cerrar();
 
 
                     txtPass.Clear();
@@ -113,6 +117,16 @@ namespace SistemaDeGestionDeBiblioteca.Presentacion
             {
                 txtPass.UseSystemPasswordChar = true;
             }
+
+
+            // Ojo tachado = contraseña oculta.
+            pbMostrarPass.Font =
+                new Font(
+                    pbMostrarPass.Font,
+                    txtPass.UseSystemPasswordChar
+                        ? FontStyle.Strikeout
+                        : FontStyle.Regular
+                );
         }
 
 
