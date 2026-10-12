@@ -232,7 +232,6 @@ Las capturas reales del sistema en ejecución están pendientes de incorporar. L
 - Cambiar la contraseña de PostgreSQL que estuvo escrita en el código: sigue visible en el historial de Git.
 - Usar roles de PostgreSQL con permisos limitados en lugar de una sola cuenta de base de datos.
 - Medir el rendimiento con un volumen grande de datos y verificar el sistema en otros equipos.
-- Corregir la ruta del proyecto en `SistemaDeBiblioteca.slnx`, que apunta a una carpeta anterior.
 - Agregar pruebas automatizadas e incorporar las capturas reales del sistema.
 
 ## Integrantes del equipo
