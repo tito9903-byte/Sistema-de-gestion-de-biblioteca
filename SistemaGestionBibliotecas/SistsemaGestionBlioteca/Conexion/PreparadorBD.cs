@@ -134,10 +134,14 @@ namespace SistemaDeGestionDeBiblioteca.Conexion
         private static bool TieneTablas(NpgsqlConnection conexion)
         {
             using (NpgsqlCommand comando = new NpgsqlCommand(
-                @"SELECT to_regclass('public.usuarios') IS NOT NULL
-                      AND to_regclass('public.roles') IS NOT NULL
+                @"SELECT to_regclass('public.roles') IS NOT NULL
+                      AND to_regclass('public.usuarios') IS NOT NULL
+                      AND to_regclass('public.categorias') IS NOT NULL
                       AND to_regclass('public.libros') IS NOT NULL
-                      AND to_regclass('public.prestamos') IS NOT NULL",
+                      AND to_regclass('public.prestamos') IS NOT NULL
+                      AND to_regclass('public.devoluciones') IS NOT NULL
+                      AND to_regclass('public.reservas') IS NOT NULL
+                      AND to_regclass('public.vw_actividad_reciente') IS NOT NULL",
                 conexion))
             {
                 return (bool)comando.ExecuteScalar()!;
